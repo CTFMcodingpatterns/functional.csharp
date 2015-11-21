@@ -9,7 +9,7 @@ using log4net;
 namespace Container.Test
 {
     [TestFixture]
-    class TryTest
+    public class TryTest
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(TryTest));
 
