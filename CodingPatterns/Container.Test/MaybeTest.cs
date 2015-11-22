@@ -116,33 +116,33 @@ namespace Container.Test
         }
 
         [Test]
-public void RawValueOperation_hello_hella()
-{
-    //Arrange
-    string val0 = "hello";
+        public void RawValueOperation_hello_empty()
+        {
+            //Arrange
+            string val0 = "hello";                   //val0 = "hello"
 
-    //Act
-    string val1 = val0.Replace("o", "a");
-    string val2 = null;
-    string val3 = null;
-    if (val1 != null) {                      //val1 = "hella"
-        val2 = TransformVal(val1);           //val2 = null
-        if (val2 != null) {
-            val3 = val2.Replace("l", "n");   //val3 = null
+            //Act
+            string val1 = val0.Replace("o", "a");    //val1 = "hella"
+            string val2 = null;
+            string val3 = null;
+            if (val1 != null) {
+                val2 = TransformVal(val1);           //val2 = null
+                if (val2 != null) {
+                    val3 = val2.Replace("l", "n");   //val3 = null
+                }
+            }
+
+            //Assert
+            Logger.Debug(""
+                + "\r\nval1: " + val1
+                + "\r\nval2: " + val2
+                + "\r\nval3: " + val3);
+            Assert.AreEqual(null, val3);
         }
-    }
 
-    //Assert
-    Logger.Debug(""
-        + "\r\nval1: " + val1
-        + "\r\nval2: " + val2
-        + "\r\nval3: " + val3);
-    Assert.AreEqual(null, val3);
-}
-
-private string TransformVal(string valIn)
-{
-    return null;
-}
+        private string TransformVal(string valIn)
+        {
+            return null;
+        }
     }
 }
