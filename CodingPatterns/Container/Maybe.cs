@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Container
 {
-    public class Optional<T>
+    public class Maybe<T>
     {
-        public static readonly Optional<T> EMPTY = new Optional<T>(default(T));
+        public static readonly Maybe<T> EMPTY = new Maybe<T>(default(T));
         private T MyValue { get; set; }
 
-        public Optional(T value)
+        public Maybe(T value)
         {
             this.MyValue = value;
         }
@@ -21,21 +21,21 @@ namespace Container
             return MyValue;
         }
 
-        public Optional<R> Map<R>(Func<T, R> mapFunc)
+        public Maybe<R> Map<R>(Func<T, R> mapFunc)
         {
             if (MyValue == null) {
-                return new Optional<R>(default(R));
+                return new Maybe<R>(default(R));
             }
             else {
                 R result = mapFunc(MyValue);
-                return new Optional<R>(result);
+                return new Maybe<R>(result);
             }
         }
 
-        public Optional<R> FlatMap<R>(Func<T, Optional<R>> mapOptFunc)
+        public Maybe<R> FlatMap<R>(Func<T, Maybe<R>> mapOptFunc)
         {
             if (MyValue == null) {
-                return new Optional<R>(default(R));
+                return new Maybe<R>(default(R));
             }
             else {
                 return mapOptFunc(MyValue);
@@ -44,7 +44,7 @@ namespace Container
 
         public override bool Equals(object obj)
         {
-            Optional<T> other = obj as Optional<T>;
+            Maybe<T> other = obj as Maybe<T>;
             if (other == null) {
                 return false;
             }
