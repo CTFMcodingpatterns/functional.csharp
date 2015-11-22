@@ -67,7 +67,7 @@ namespace Container.Test
             Maybe<string> opt = new Maybe<string>("hello");
 
             //Act
-            Maybe<string> optResult = opt        //value = "hello"
+            Maybe<string> optResult = opt           //value = "hello"
                 .Map(str => str.Replace("o", "a"))  //value = "hella"
                 .Map<string>(str => null)           //value = null
                 .Map(str => str.Replace("l", "n")); //value = null
@@ -76,7 +76,6 @@ namespace Container.Test
             Logger.Debug("result: " + optResult.Get());
             Assert.AreEqual(Maybe<string>.EMPTY, optResult);
         }
-
 
         [Test]
         public void SelectMap_hello_hella()
@@ -99,5 +98,51 @@ namespace Container.Test
             Assert.AreEqual("henna", optResult.Get());
         }
 
+        [Test]
+        public void Map_NullTransformed_empty()
+        {
+            //Arrange
+            Maybe<string> opt = new Maybe<string>("hello");
+
+            //Act
+            Maybe<string> optResult = opt               //value = "hello"
+                .Map(str => str.Replace("o", "a"))      //value = "hella"
+                .Map<string>(str => TransformVal(str))  //value = null
+                .Map(str => str.Replace("l", "n"));     //value = null
+
+            //Assert
+            Logger.Debug("result: " + optResult.Get());
+            Assert.AreEqual(Maybe<string>.EMPTY, optResult);
+        }
+
+        [Test]
+public void RawValueOperation_hello_hella()
+{
+    //Arrange
+    string val0 = "hello";
+
+    //Act
+    string val1 = val0.Replace("o", "a");
+    string val2 = null;
+    string val3 = null;
+    if (val1 != null) {                      //val1 = "hella"
+        val2 = TransformVal(val1);           //val2 = null
+        if (val2 != null) {
+            val3 = val2.Replace("l", "n");   //val3 = null
+        }
+    }
+
+    //Assert
+    Logger.Debug(""
+        + "\r\nval1: " + val1
+        + "\r\nval2: " + val2
+        + "\r\nval3: " + val3);
+    Assert.AreEqual(null, val3);
+}
+
+private string TransformVal(string valIn)
+{
+    return null;
+}
     }
 }
