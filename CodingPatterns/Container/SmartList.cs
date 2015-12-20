@@ -10,9 +10,29 @@ namespace Container
     {
         private IEnumerable<T> MyList { get; set; }
 
-        public SmartList(IEnumerable<T> list)
+        private SmartList(IEnumerable<T> list)
         {
             this.MyList = list;
+        }
+
+        static public SmartList<T> Of(IEnumerable<T> list)
+        {
+            return new SmartList<T>(list);
+        }
+
+        public SmartList<T> Filter(Predicate<T> filterFunc)
+        {
+            IEnumerable<T> resultList = GetFilteringIterator(this.MyList, filterFunc);
+            return new SmartList<T>(resultList);
+        }
+
+        public IEnumerable<T> GetFilteringIterator(IEnumerable<T> list, Predicate<T> filterFunc)
+        {
+            foreach (T element in MyList) {
+                if (filterFunc(element)) {
+                    yield return element;
+                }
+            }
         }
 
         public SmartList<R> Map<R>(Func<T, R> mapFunc)
@@ -29,17 +49,37 @@ namespace Container
             }
         }
 
-        public SmartList<T> Filter(Predicate<T> filterFunc)
+        public SmartList<T2> FlatMap<T2>(Func<T, IEnumerable<T2>> selectFunc)
+
         {
-            IEnumerable<T> resultList = GetFilteringIterator(this.MyList, filterFunc);
-            return new SmartList<T>(resultList);
+            IEnumerable<T2> resultList = GetFlatMapIterator(selectFunc);
+            return new SmartList<T2>(resultList);
         }
 
-        public IEnumerable<T> GetFilteringIterator(IEnumerable<T> list, Predicate<T> filterFunc)
+        public IEnumerable<T2> GetFlatMapIterator<T2>(Func<T, IEnumerable<T2>> selectFunc)
+        {
+            foreach (T element in MyList)
+            {
+                foreach (T2 innerElement in selectFunc(element))
+                {
+                    yield return innerElement;
+                }
+            }
+        }
+
+        public SmartList<R> FlatMap<T2,R>(Func<T, IEnumerable<T2>> selectFunc,
+            Func<T, T2, R> mapFunc)
+        {
+            IEnumerable<R> resultList = GetFlatMapIterator(selectFunc, mapFunc);
+            return new SmartList<R>(resultList);
+        }
+
+        public IEnumerable<R> GetFlatMapIterator<T2,R>(Func<T, IEnumerable<T2>> selectFunc,
+            Func<T, T2, R> mapFunc)
         {
             foreach (T element in MyList) {
-                if (filterFunc(element)) {
-                    yield return element;
+                foreach (T2 innerElement in selectFunc(element)) {
+                    yield return mapFunc(element, innerElement);
                 }
             }
         }
