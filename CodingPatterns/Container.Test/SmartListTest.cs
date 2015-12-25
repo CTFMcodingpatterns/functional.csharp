@@ -83,6 +83,25 @@ namespace Container.Test
         }
 
         [Test]
+        public void Map_ElementsNested_ReturnsSmartList()
+        {
+            //Arrange
+            IEnumerable<IEnumerable<string>> nestedList = new List<IEnumerable<string>>() {
+                new List<string>() { "a1", "a2", "a3"},
+                new List<string>() { "b1", "b2", "b3"},
+            };
+
+            //Act
+            SmartList<IEnumerable<string>> resultList = SmartList<IEnumerable<string>>
+                .Of(nestedList)
+                .Map(outerElement => outerElement);
+
+            //Assert
+            Logger.Debug("resultList: " + resultList);
+            //TODO
+        }
+
+        [Test]
         public void FlatMap_ElementsNested_ReturnsSmartList()
         {
             //Arrange
@@ -90,12 +109,11 @@ namespace Container.Test
                 new List<string>() { "a1", "a2", "a3"},
                 new List<string>() { "b1", "b2", "b3"},
             };
-            var result = nestedList.First();
 
             //Act
             SmartList<string> resultList = SmartList<IEnumerable<string>>
                 .Of(nestedList)
-                .FlatMap(outer => outer);
+                .FlatMap(outerElement => outerElement);
 
             //Assert
             Logger.Debug("resultList: " + resultList);

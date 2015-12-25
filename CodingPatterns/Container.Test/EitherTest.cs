@@ -17,7 +17,7 @@ namespace Container.Test
         public void Parse_WithNumberString_ReturnsNumber()
         {
             //Act
-            Either<Exception, int> either42 = EitherUser.Parse("42");
+            Either<Exception, int?> either42 = EitherUser.Parse("42");
 
             //Assert
             Logger.Debug("either42: " + either42);
@@ -29,23 +29,22 @@ namespace Container.Test
         public void Parse_WithNumberString_ReturnsError()
         {
             //Act
-            Either<Exception, int> either42 = EitherUser.Parse("42xxx");
+            Either<Exception, int?> either42 = EitherUser.Parse("42xxx");
 
             //Assert
             Logger.Debug("either42: " + either42);
             Assert.IsInstanceOf<FormatException>(either42.Left);
-            Assert.AreEqual(default(int), either42.Right);
+            Assert.AreEqual(null, either42.Right);
         }
 
         [Test]
         public void ParseAndCalc_WithNumberString_ReturnsNumber()
         {
             //Act
-            Either<Exception, int> either42 = EitherUser.Parse("42");
+            Either<Exception, int?> either42 = EitherUser.Parse("42");
             int num84 = 0;
-            if (either42.Right != null)
-            {
-                num84 = either42.Right * 2;
+            if (either42.Right != null) {
+                num84 = either42.Right.Value * 2;
             }
 
             //Assert
