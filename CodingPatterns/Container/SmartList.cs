@@ -84,6 +84,13 @@ namespace Container
             }
         }
 
+        public R Fold<R>(R seed, Func<R,T,R> foldFunc) 
+        {
+            //TODO
+            R result = MyList.Aggregate(seed, foldFunc); //TODO: no seed!!!
+            return result;
+        }
+
         public override string ToString()
         {
             return MyList                

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using log4net;
+using Business;
 
 namespace Container.Test
 {
@@ -102,7 +103,7 @@ namespace Container.Test
         }
 
         [Test]
-        public void FlatMap_ElementsNested_ReturnsSmartList()
+        public void FlatMap_ElementsNested_ReturnsSmartList1()
         {
             //Arrange
             IEnumerable<IEnumerable<string>> nestedList = new List<IEnumerable<string>>() {
@@ -124,20 +125,62 @@ namespace Container.Test
         public void FlatMap_ElementsNested_ReturnsSmartList2()
         {
             //Arrange
-            IEnumerable<IEnumerable<string>> nestedList = new List<IEnumerable<string>>() {
-                new List<string>() { "a1", "a2", "a3"},
-                new List<string>() { "b1", "b2", "b3"},
+            IEnumerable<Order> orderList = new List<Order>() {
+                new Order(1, "order1", new List<OrderItem>() {
+                    new OrderItem(11, "item11"),
+                    new OrderItem(12, "item12")
+                }),
+                new Order(2, "order2", new List<OrderItem>() {
+                    new OrderItem(21, "item21"),
+                    new OrderItem(22, "item22")
+                })
             };
-            var result = nestedList.First();
 
             //Act
-            SmartList<string> resultList = SmartList<IEnumerable<string>>
-                .Of(nestedList)
-                .FlatMap(outer => outer, (outer, inner) => outer + ": " + inner);
+            SmartList<string> resultList = SmartList<Order>
+                .Of(orderList)
+                .FlatMap<OrderItem>(order => order.Items)
+                .Map(item => item.Description);
 
             //Assert
+            Logger.Debug("resultList: " + resultList);
+            Assert.IsNotEmpty(ToList(resultList));
+            Assert.AreEqual("item11", ToList(resultList)[0]);
+        }
+
+        [Test]
+        public void FlatMap_ElementsNested_ReturnsSmartList3()
+        {
+            //Arrange
+            IEnumerable<Order> orderList = new List<Order>() {
+                new Order(1, "order1", new List<OrderItem>() {
+                    new OrderItem(11, "item11"),
+                    new OrderItem(12, "item12")
+                }),
+                new Order(2, "order2", new List<OrderItem>() {
+                    new OrderItem(21, "item21"),
+                    new OrderItem(22, "item22")
+                })
+            };
+
+            //Act
+            SmartList<string> resultList = SmartList<Order>
+                .Of(orderList)
+                .FlatMap<OrderItem, string>(
+                    order => order.Items,
+                    (order, item) => order.Description + ": " + item.Description);
+
+            //Assert
+            Logger.Debug("resultList: " + resultList);
             //TODO
         }
 
+        private List<string> ToList(SmartList<string> smartList)
+        {
+            List<string> descList = smartList.Fold<List<string>>(
+                new List<string>(),
+                (acc, el) => { acc.Add(el); return acc; });
+            return descList;
+        }
     }
 }
