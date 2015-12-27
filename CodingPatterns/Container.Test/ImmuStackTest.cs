@@ -14,7 +14,7 @@ namespace Container.Test
         private static readonly ILog Logger = LogManager.GetLogger(typeof(ImmuStackTest));
 
         [Test]
-        public void push_abc_HeadIsC()
+        public void Cons_abc_HeadIsC()
         {
             //Arrange
             ImmuStack<string> stack0 = ImmuStack<string>.Empty();
@@ -35,6 +35,21 @@ namespace Container.Test
             Assert.AreEqual("a", stack1.Head);
             Assert.AreEqual("b", stack2.Head);
             Assert.AreEqual("c", stack3.Head);
+        }
+
+        [Test]
+        public void Push_x_y()
+        {
+            //Arrange
+            ImmuStack<string> stack0 = ImmuStack<string>.Empty();
+
+            //Act
+            ImmuStack<string> stack1 = stack0.Push("a");
+            ImmuStack<string> stack2 = stack1.Push("b");
+
+            //Assert
+            Logger.Debug("stack2: " + stack2.ToString());
+            Assert.AreEqual("b", stack2.Head);
         }
     }
 }
