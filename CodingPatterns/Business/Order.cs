@@ -10,11 +10,13 @@ namespace Business
     {
         public int Number { get; private set; }
         public string Description { get; private set; }
+        public DateTime CreationDate { get; private set; }
         public IEnumerable<OrderItem> Items { get; private set; }
-        public Order(int num, string desc, IEnumerable<OrderItem> items)
+        public Order(int num, string desc, DateTime date, IEnumerable<OrderItem> items)
         {
             this.Number = num;
             this.Description = desc;
+            this.CreationDate = date;
             this.Items = items;
         }
     }

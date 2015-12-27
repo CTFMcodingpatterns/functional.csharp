@@ -10,15 +10,15 @@ namespace Business
     {
         public int Number { get; private set; }
         public string Description { get; private set;}
-        public DateTime CreationDate { get; private set; }
+        public int? Price { get; private set; }
         public Product ItemProduct { get; private set; }
 
-        public OrderItem(int num, string desc, DateTime? date = null, Product prod = null)
+        public OrderItem(int num, string desc, Product prod = null, int? price = null)
         {
             this.Number = num;
             this.Description = desc;
-            this.CreationDate = date ?? DateTime.Today;
             this.ItemProduct = prod;
+            this.Price = price;
         }
     }
 }

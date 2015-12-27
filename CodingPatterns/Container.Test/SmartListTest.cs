@@ -126,11 +126,11 @@ namespace Container.Test
         {
             //Arrange
             IEnumerable<Order> orderList = new List<Order>() {
-                new Order(1, "order1", new List<OrderItem>() {
+                new Order(1, "order1", new DateTime(2016,01,01), new List<OrderItem>() {
                     new OrderItem(11, "item11"),
                     new OrderItem(12, "item12")
                 }),
-                new Order(2, "order2", new List<OrderItem>() {
+                new Order(2, "order2", new DateTime(2016,01,02), new List<OrderItem>() {
                     new OrderItem(21, "item21"),
                     new OrderItem(22, "item22")
                 })
@@ -153,11 +153,11 @@ namespace Container.Test
         {
             //Arrange
             IEnumerable<Order> orderList = new List<Order>() {
-                new Order(1, "order1", new List<OrderItem>() {
+                new Order(1, "order1", new DateTime(2016,01,01), new List<OrderItem>() {
                     new OrderItem(11, "item11"),
                     new OrderItem(12, "item12")
                 }),
-                new Order(2, "order2", new List<OrderItem>() {
+                new Order(2, "order2", new DateTime(2016,01,02), new List<OrderItem>() {
                     new OrderItem(21, "item21"),
                     new OrderItem(22, "item22")
                 })
@@ -175,6 +175,40 @@ namespace Container.Test
             //TODO
         }
 
+        [Test]
+        public void Map_WithItems_ReturnsList()
+        {
+            //Arrange
+
+            //Act
+            IEnumerable<OrderItem> itemList = CreateItems();
+            IEnumerable<string> priceList = SmartList<OrderItem>.Of(itemList)
+                .Filter(item => item.Price < 100)
+                .Map(item => item.Number + ". " + item.Description + ": " + item.Price)
+                .Fold(new List<string>(), (acc, item) => { acc.Add(item); return acc; });
+
+            //Assert
+            Logger.Debug("priceList: " + priceList.ToString());
+        }
+
+        [Test]
+        public void LINQSelect_WithItems_ReturnsList()
+        {
+            //Arrange
+
+            //Act
+            IEnumerable<string> priceList = CreateItems()
+                .Where(item => item.Price < 100)
+                .Select(item => item.Number + ". " + item.Description + ": " + item.Price)
+                .ToList();
+
+            //Assert
+            Logger.Debug("priceList: " + priceList.ToString());
+        }
+
+
+        #region helpers
+
         private List<string> ToList(SmartList<string> smartList)
         {
             List<string> descList = smartList.Fold<List<string>>(
@@ -182,5 +216,19 @@ namespace Container.Test
                 (acc, el) => { acc.Add(el); return acc; });
             return descList;
         }
+
+        private static IEnumerable<OrderItem> CreateItems()
+        {
+            IEnumerable<OrderItem> itemList = new List<OrderItem>() {
+                new OrderItem(1, "apple", price: 10),
+                new OrderItem(2, "banana", price: 20),
+                new OrderItem(3, "pea", price: 15),
+                new OrderItem(4, "caviar", price: 115),
+                new OrderItem(5, "lobster", price: 105)
+            };
+            return itemList;
+        }
+
+        #endregion
     }
 }
