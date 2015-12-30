@@ -38,7 +38,7 @@ namespace Container.Test
         }
 
         [Test]
-        public void Push_x_y()
+        public void Push_AB_ReturnsBA()
         {
             //Arrange
             ImmuStack<string> stack0 = ImmuStack<string>.Empty();
@@ -48,8 +48,83 @@ namespace Container.Test
             ImmuStack<string> stack2 = stack1.Push("b");
 
             //Assert
-            Logger.Debug("stack2: " + stack2.ToString());
+            Logger.Debug("stack2:\r\n" + stack2);
             Assert.AreEqual("b", stack2.Head);
         }
+
+        [Test]
+        public void FoldLeft_PushToAB_ReturnsBA()
+        {
+            //Arrange
+            ImmuStack<string> stack0 = ImmuStack<string>.Empty()
+                .Push("b")
+                .Push("a");
+
+            //Act
+            ImmuStack<string> stack1 = stack0
+                .FoldLeft(ImmuStack<string>.Empty(), (acc, item) => acc.Push(item));
+
+            //Assert
+            Logger.Debug(""
+                + "\r\nstack0:\r\n" + stack0
+                + "\r\nstack1:\r\n" + stack1);
+            Assert.AreEqual("b", stack1.Head);
+        }
+
+        [Test]
+        public void FoldLeft_PushToAB_ReturnsAB()
+        {
+            //Arrange
+            ImmuStack<string> stack0 = ImmuStack<string>.Empty()
+                .Push("b")   //second
+                .Push("a");  //head
+
+            //Act
+            ImmuStack<string> stack1 = stack0
+                .FoldRight(ImmuStack<string>.Empty(), (acc, item) => acc.Push(item));
+
+            //Assert
+            Logger.Debug(""
+                + "\r\nstack0:\r\n" + stack0
+                + "\r\nstack1:\r\n" + stack1);
+            Assert.AreEqual("a", stack1.Head);
+        }
+
+        [Test]
+        public void ToString4_PushToABC_ReturnsABC()
+        {
+            //Arrange
+            ImmuStack<string> stack = ImmuStack<string>.Empty()
+                .Push("c")   //third
+                .Push("b")   //second
+                .Push("a");  //first = head
+
+            //Act
+            string stackString = stack.ToString();
+
+            //Assert
+            Logger.Debug(""
+                + "\r\nstack0:\r\n" + stack);
+            Assert.AreEqual("a\r\nb\r\nc", stackString);
+        }
+
+        [Test]
+        public void ToList_WithStack_ReturnsList()
+        {
+            //Arrange
+            ImmuStack<string> stack = ImmuStack<string>.Empty()
+                .Push("c")   //third
+                .Push("b")   //second
+                .Push("a");  //first = head
+
+            //Act
+            IEnumerable<string> list = stack.ToList();
+
+            //Assert
+            Logger.Debug(""
+                + "\r\nstack0:\r\n" + stack);
+            Assert.AreEqual(new List<string>() { "a", "b", "c" }, list);
+        }
+
     }
 }
