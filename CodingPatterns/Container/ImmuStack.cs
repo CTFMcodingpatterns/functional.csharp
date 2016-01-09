@@ -48,14 +48,13 @@ namespace Container
             return this.Reverse().FoldLeft(acc, foldFunc);
         }
 
-        public ImmuStack<T> FromList(IEnumerable<T> list)
+        public static ImmuStack<T> FromList(IEnumerable<T> list)
         {
             ImmuStack<T> stack = ImmuStack<T>.Empty();
-            foreach (T item in list)
-            {
-                stack = new ImmuStack<T>(item, stack);
+            foreach (T item in list) {
+                stack = stack.Push(item);
             }
-            return stack;
+            return stack.Reverse();
         }
 
         public IEnumerable<T> ToList()
@@ -68,8 +67,9 @@ namespace Container
         public override string ToString()
         {
             const string sep = "\r\n";
-            string result = this.Tail
-                .FoldLeft<string>(ToString(this.Head), (acc, item) => acc + sep + item);
+            string result = ""
+                + this.Head // + " (head)"
+                + this.Tail.FoldLeft<string>("", (acc, item) => acc + sep + item);
             return result;
         }
 

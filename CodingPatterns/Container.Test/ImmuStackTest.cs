@@ -109,6 +109,21 @@ namespace Container.Test
         }
 
         [Test]
+        public void FomList_WithListABC_ReturnsStackABC()
+        {
+            //Arrange
+            IEnumerable<string> list = new List<string>() { "a", "b", "c" };
+
+            //Act
+            ImmuStack<string> stack = ImmuStack<string>.FromList(list);
+
+            //Assert
+            Logger.Debug(""
+                + "\r\nstack0:\r\n" + stack);
+            Assert.AreEqual("a", stack.Head);
+        }
+
+        [Test]
         public void ToList_WithStack_ReturnsList()
         {
             //Arrange
@@ -125,6 +140,31 @@ namespace Container.Test
                 + "\r\nstack0:\r\n" + stack);
             Assert.AreEqual(new List<string>() { "a", "b", "c" }, list);
         }
+
+        [Test]
+        public void ToList_WithListABC_ReturnsListABC()
+        {
+            //Arrange
+            IEnumerable<string> list1 = new List<string>() { "a", "b", "c" };
+            ImmuStack<string> stack = ImmuStack<string>.FromList(list1);
+
+            //Act
+            IEnumerable<string> list2 = stack.ToList();
+
+            //Assert
+            Logger.Debug(""
+                + "\r\nlist2:\r\n" + ToString(list2));
+            Assert.AreEqual(new List<string>() { "a", "b", "c" }, list2);
+        }
+
+        #region helpers
+
+        private static string ToString(IEnumerable<string> list, string sep = "\r\n")
+        {
+            return list.Aggregate((acc, item) => acc + sep + item);
+        }
+
+        #endregion
 
     }
 }
