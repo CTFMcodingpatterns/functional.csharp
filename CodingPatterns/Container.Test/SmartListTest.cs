@@ -21,7 +21,7 @@ namespace Container.Test
             SmartList<string> smartList = SmartList<string>.Of(new List<string>() { "alfa", "beta", "gamma" });
 
             //Act
-            SmartList<string> resultList = smartList
+            ISmartContainer<string> resultList = smartList
                 .Map(element => element + "_smart");
 
             //Assert
@@ -37,7 +37,7 @@ namespace Container.Test
             SmartList<string> smartList = SmartList<string>.Of(new List<string>() { "alfa", "beta", "gamma" });
 
             //Act
-            SmartList<string> resultList = smartList
+            ISmartContainer<string> resultList = smartList
                 .Map(element => element + "_smart")
                 .Map(el2 => el2.Replace("_", "-"));
 
@@ -53,7 +53,7 @@ namespace Container.Test
             //Arrange
 
             //Act
-            SmartList<string> resultList = SmartList<int>.Of(new List<int>() { 10, 20, 30 })
+            ISmartContainer<string> resultList = SmartList<int>.Of(new List<int>() { 10, 20, 30 })
                 .Map(num => num * 2)
                 .Map(num => num.ToString())
                 .Map(str1 => str1 + "_smart")
@@ -71,7 +71,7 @@ namespace Container.Test
             //Arrange
 
             //Act
-            SmartList<string> resultList = SmartList<int>
+            ISmartContainer<string> resultList = SmartList<int>
                 .Of(new List<int>() { 1, 2, 3, 4 })
                 .Filter(num => num % 2 == 0)
                 .Map(num => num.ToString())
@@ -93,7 +93,7 @@ namespace Container.Test
             };
 
             //Act
-            SmartList<IEnumerable<string>> resultList = SmartList<IEnumerable<string>>
+            ISmartContainer<IEnumerable<string>> resultList = SmartList<IEnumerable<string>>
                 .Of(nestedList)
                 .Map(outerElement => outerElement);
 
@@ -112,7 +112,7 @@ namespace Container.Test
             };
 
             //Act
-            SmartList<string> resultList = SmartList<IEnumerable<string>>
+            ISmartContainer<string> resultList = SmartList<IEnumerable<string>>
                 .Of(nestedList)
                 .FlatMap(outerElement => outerElement);
 
@@ -137,7 +137,7 @@ namespace Container.Test
             };
 
             //Act
-            SmartList<string> resultList = SmartList<Order>
+            ISmartContainer<string> resultList = SmartList<Order>
                 .Of(orderList)
                 .FlatMap<OrderItem>(order => order.Items)
                 .Map(item => item.Description);
@@ -164,7 +164,7 @@ namespace Container.Test
             };
 
             //Act
-            SmartList<string> resultList = SmartList<Order>
+            ISmartContainer<string> resultList = SmartList<Order>
                 .Of(orderList)
                 .FlatMap<OrderItem, string>(
                     order => order.Items,
@@ -185,7 +185,7 @@ namespace Container.Test
             IEnumerable<string> priceList = SmartList<OrderItem>.Of(itemList)
                 .Filter(item => item.Price < 100)
                 .Map(item => item.Number + ". " + item.Description + ": " + item.Price)
-                .Fold(new List<string>(), (acc, item) => { acc.Add(item); return acc; });
+                .Reduce(new List<string>(), (acc, item) => { acc.Add(item); return acc; });
 
             //Assert
             Logger.Debug("priceList: " + priceList.ToString());
@@ -209,9 +209,9 @@ namespace Container.Test
 
         #region helpers
 
-        private List<string> ToList(SmartList<string> smartList)
+        private List<string> ToList(ISmartContainer<string> smartList)
         {
-            List<string> descList = smartList.Fold<List<string>>(
+            List<string> descList = smartList.Reduce<List<string>>(
                 new List<string>(),
                 (acc, el) => { acc.Add(el); return acc; });
             return descList;

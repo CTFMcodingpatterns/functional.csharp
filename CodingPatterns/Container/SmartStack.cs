@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Container
 {
-    public class SmartStack<T>
+    public class SmartStack<T> : ISmartContainer<T>
     {
         private ImmuStack<T> MyStack { get; set; }
 
@@ -25,12 +25,15 @@ namespace Container
             return new SmartStack<T>(ImmuStack<T>.FromList(list));
         }
 
-        public R Reduce<R>(R acc, Func<R, T, R> foldFunc)
+        public ISmartContainer<T> Filter(Predicate<T> filterFunc)
         {
-            return MyStack.FoldRight<R>(acc, foldFunc);
+            ImmuStack<T> resultStack = MyStack.FoldRight(
+                ImmuStack<T>.Empty(),                                   //init accumulator
+                (acc, item) => filterFunc(item) ? acc.Push(item) : acc); //add item to accu or pass old accu
+            return SmartStack<T>.Of(resultStack);
         }
 
-        public SmartStack<R> Map<R>(Func<T, R> mapFunc)
+        public ISmartContainer<R> Map<R>(Func<T, R> mapFunc)
         {
             ImmuStack<R> resultStack = MyStack.FoldRight(
                 ImmuStack<R>.Empty(),                      //init accumulator
@@ -38,20 +41,22 @@ namespace Container
             return SmartStack<R>.Of(resultStack);
         }
 
-        public SmartStack<T> Filter(Func<T, bool> filterFunc)
+        public ISmartContainer<R> FlatMap<T2, R>(Func<T, IEnumerable<T2>> selectFunc, Func<T, T2, R> mapFunc)
         {
-            ImmuStack<T> resultStack = MyStack.FoldRight(
-                ImmuStack<T>.Empty(),                                   //init accumulator
-                (acc,item) => filterFunc(item) ? acc.Push(item) : acc); //add item to accu or pass old accu
-            return SmartStack<T>.Of(resultStack);
+            throw new NotImplementedException();
+        }
+
+        public R Reduce<R>(R acc, Func<R, T, R> foldFunc)
+        {
+            return MyStack.FoldRight<R>(acc, foldFunc);
         }
 
         public IEnumerable<T> ToList()
         {
-            IEnumerable<T> result = Reduce<List<T>>(
+            return MyStack.FoldLeft<IList<T>>(
                 new List<T>(),
-                (acc, item) => { acc.Add(item); return acc; });
-            return MyStack.ToList();
+                (acc, item) => { acc.Add(item); return acc; }
+                );
         }
 
         public override string ToString()
@@ -60,6 +65,7 @@ namespace Container
                 ? "\r\n" + MyStack.ToString()
                 : null;
         }
+
 
     }
 }

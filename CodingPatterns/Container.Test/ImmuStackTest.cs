@@ -72,7 +72,7 @@ namespace Container.Test
         }
 
         [Test]
-        public void FoldLeft_PushToAB_ReturnsAB()
+        public void FoldRight_PushToAB_ReturnsAB()
         {
             //Arrange
             ImmuStack<string> stack0 = ImmuStack<string>.Empty()

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Container
 {
-    public class SmartList<T>
+    public class SmartList<T> : ISmartContainer<T>
     {
         private IEnumerable<T> MyList { get; set; }
 
@@ -20,7 +20,7 @@ namespace Container
             return new SmartList<T>(list);
         }
 
-        public SmartList<T> Filter(Predicate<T> filterFunc)
+        public ISmartContainer<T> Filter(Predicate<T> filterFunc)
         {
             IEnumerable<T> resultList = GetFilteringIterator(this.MyList, filterFunc);
             return new SmartList<T>(resultList);
@@ -35,7 +35,7 @@ namespace Container
             }
         }
 
-        public SmartList<R> Map<R>(Func<T, R> mapFunc)
+        public ISmartContainer<R> Map<R>(Func<T, R> mapFunc)
         {
             IEnumerable<R> resultList = GetMappingIterator<R>(this.MyList, mapFunc);
             return new SmartList<R>(resultList);
@@ -49,7 +49,7 @@ namespace Container
             }
         }
 
-        public SmartList<T2> FlatMap<T2>(Func<T, IEnumerable<T2>> selectFunc)
+        public ISmartContainer<T2> FlatMap<T2>(Func<T, IEnumerable<T2>> selectFunc)
 
         {
             IEnumerable<T2> resultList = GetFlatMapIterator(selectFunc);
@@ -67,7 +67,7 @@ namespace Container
             }
         }
 
-        public SmartList<R> FlatMap<T2,R>(Func<T, IEnumerable<T2>> selectFunc,
+        public ISmartContainer<R> FlatMap<T2, R>(Func<T, IEnumerable<T2>> selectFunc,
             Func<T, T2, R> mapFunc)
         {
             IEnumerable<R> resultList = GetFlatMapIterator(selectFunc, mapFunc);
@@ -84,11 +84,18 @@ namespace Container
             }
         }
 
-        public R Fold<R>(R seed, Func<R,T,R> foldFunc) 
+        public R Reduce<R>(R seed, Func<R,T,R> foldFunc) 
         {
             //TODO
             R result = MyList.Aggregate(seed, foldFunc); //TODO: no seed!!!
             return result;
+        }
+
+        public IEnumerable<T> ToList()
+        {
+            return Reduce<List<T>>(
+                new List<T>(),
+                (acc, item) => { acc.Add(item); return acc; });
         }
 
         public override string ToString()
