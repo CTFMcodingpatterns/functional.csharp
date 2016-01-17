@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="EitherUser.cs" />
     <Compile Include="IntParser.cs" />
+    <Compile Include="NestedCode.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="OrderItem.cs" />
     <Compile Include="ProceduralPipeline.cs" />
