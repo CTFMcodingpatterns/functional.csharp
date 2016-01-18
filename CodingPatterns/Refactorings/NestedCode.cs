@@ -12,8 +12,8 @@ namespace Refactorings
     /// Before: DiscountNested() 
     /// Problems:
     /// - problem 1: model data structure is mutable
-    /// - problem 2: working object is mutable and can be shared
-    /// - problem 3: mutable shared object passed to other method
+    /// - problem 2: working object is mutable and shared
+    /// - problem 3: mutable object passed to other method
     /// - problem 4: filtering (read) and modification (write) is not separated
     /// - problem 5: foreign mutable object is modified in method
     /// 
@@ -26,29 +26,29 @@ namespace Refactorings
     /// </summary>
     public class NestedCode
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public void DiscountNested()
-        {
-            //problem 1: model data structure is mutable:
-            IEnumerable<Model.Mutable.OrderItem> itemsIn = new List<Model.Mutable.OrderItem>() {
+        //problem 1: model data structure is mutable:
+        IEnumerable<Model.Mutable.OrderItem> ItemsIn = new List<Model.Mutable.OrderItem>() {
                 new Model.Mutable.OrderItem(1, "", new Model.Mutable.Product("apple", 10, "fruit"), 10),
                 new Model.Mutable.OrderItem(1, "", new Model.Mutable.Product("pear", 10, "fruit"), 10),
                 new Model.Mutable.OrderItem(1, "", new Model.Mutable.Product("carrot", 10, "vegetables"), 10)
             };
 
-            //problem 2: working object is mutable and can be shared:
-            IList<Model.Mutable.OrderItem> itemsOut = new List<Model.Mutable.OrderItem>();
+        //problem 2: working object is mutable and shared:
+        IList<Model.Mutable.OrderItem> ItemsOut = new List<Model.Mutable.OrderItem>();
 
-            foreach (Model.Mutable.OrderItem item in itemsIn) {
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DiscountNested()
+        {
+            foreach (Model.Mutable.OrderItem item in ItemsIn) {
 
-                //problem 3: mutable shared object passed to other method:
-                FilterAndDiscountItem(itemsOut, item);
+                //problem 3: mutable object passed to other method:
+                FilterAndDiscountItem(item);
             }
         }
 
-        private void FilterAndDiscountItem(IList<Model.Mutable.OrderItem> itemsOut, Model.Mutable.OrderItem item)
+        private void FilterAndDiscountItem(Model.Mutable.OrderItem item)
         {
             //problem 4: filtering (read) and modification (write) is not separated
 
@@ -58,8 +58,8 @@ namespace Refactorings
                 //problem 3 again: mutable item passed to other method:
                 ApplyDiscountToItem(item, 20);
 
-                //problem 5: foreign mutable itemsOut is modified here:
-                itemsOut.Add(item);
+                //problem 5: shared mutable itemsOut is modified here:
+                ItemsOut.Add(item);
             }
         }
 
