@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business
+namespace Model.Mutable
 {
     public class Order
     {
-        public int Number { get; private set; }
-        public string Description { get; private set; }
-        public DateTime CreationDate { get; private set; }
-        public IEnumerable<OrderItem> Items { get; private set; }
+        public int Number { get; set; }
+        public string Description { get; set; }
+        public DateTime CreationDate { get; set; }
+        public IEnumerable<OrderItem> Items { get; set; }
         public Order(int num, string desc, DateTime date, IEnumerable<OrderItem> items)
         {
             this.Number = num;

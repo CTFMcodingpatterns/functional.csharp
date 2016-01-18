@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using log4net;
 using Business;
+using Model;
 
 namespace Container.Test
 {

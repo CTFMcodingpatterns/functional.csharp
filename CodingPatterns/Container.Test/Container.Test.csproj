@@ -74,6 +74,10 @@
       <Project>{4ebfb9e9-4ff0-45bc-923c-de3bf8c6a1b1}</Project>
       <Name>Container</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{a487a9bc-e7f1-4a3e-b93e-1afdd6888856}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
