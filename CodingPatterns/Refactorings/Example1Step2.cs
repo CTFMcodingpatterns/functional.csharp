@@ -11,7 +11,7 @@ namespace Refactorings
     /// </summary>
     public class Example1Step2
     {
-        public void DiscountNested()
+        public void DiscountUnNested()
         {
             //solution 1: model data is immutable:
             IEnumerable<Model.OrderItem> items1 = new List<Model.OrderItem>() {

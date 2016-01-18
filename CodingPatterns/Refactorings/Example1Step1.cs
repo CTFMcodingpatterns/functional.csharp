@@ -37,7 +37,6 @@ namespace Refactorings
             Model.Mutable.Product prod = item.ItemProduct;
             if (prod.Description == "fruit")                             //level 2: condition block
             {
-
                 //problem 3 again: mutable item passed to other method:
                 ApplyDiscountToItem(item, 20);
 
