@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NestedCode.cs" />
+    <Compile Include="Example1Step2.cs" />
+    <Compile Include="Example1Step3.cs" />
+    <Compile Include="Example1Step1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
